@@ -40,7 +40,7 @@ window.RDMP_CONFIG = {
 
 El formulario usa [FormSubmit](https://formsubmit.co/) (`https://formsubmit.co/ajax/rdmpmaquinaria@gmail.com`), que reenvía cada solicitud a **rdmpmaquinaria@gmail.com** como una tabla con todos los campos. El asunto incluye el tipo de máquina y el modelo, y al pulsar «Responder» se contesta directamente al cliente.
 
-- **Activación:** FormSubmit no reenvía nada hasta que se pulsa el enlace «Activate Form» del correo que manda a rdmpmaquinaria@gmail.com (revisa también la carpeta de spam). Hasta entonces la web muestra «No se ha podido enviar la solicitud». Si, al publicar la web en su dominio, vuelve a pedir activación, basta con repetir el paso.
+- **Activación:** FormSubmit no reenvía nada hasta que se pulsa el enlace «Activate Form» del correo que manda a rdmpmaquinaria@gmail.com (revisa también la carpeta de spam). Hasta entonces la web muestra «No se ha podido enviar la solicitud». **La activación va ligada a la dirección desde la que se envía el formulario**: debe hacerse con un envío desde <https://rdmpempresa.vercel.app/> (un envío desde `localhost` genera un enlace que no sirve para la web pública). Cada envío sin activar genera un correo nuevo e invalida los enlaces anteriores, así que hay que usar siempre el más reciente.
 - **Protección antispam:** el formulario incluye un campo trampa oculto (`_honey`).
 - **Privacidad:** los datos pasan por FormSubmit, un servicio de terceros. La política de privacidad debe mencionarlo.
 - **Cambiar de servicio:** basta con poner otra URL en `destinoFormulario` (Formspree, un backend propio…). Si el servicio exige otro formato de datos, se ajusta en `public/js/main.js`.
@@ -92,7 +92,11 @@ Barlow y Barlow Condensed, servidas desde `public/assets/fonts/` (sin peticiones
 - [ ] Activar FormSubmit con el enlace recibido en rdmpmaquinaria@gmail.com y hacer una prueba real.
 - [ ] Derechos de publicación de las cinco imágenes usadas.
 - [ ] Aviso legal (identificación del titular, obligatoria en España según la LSSI) y política de privacidad (RGPD), enlazados en el pie y junto a la casilla del formulario.
-- [ ] Dominio definitivo: cuando exista, cambiar `og:image` en `public/index.html` por la URL absoluta (por ejemplo `https://dominio/assets/img/portada-bulldozer-735.jpg`) y añadir `<link rel="canonical">`.
+- [x] Dominio: la web está publicada en Vercel en <https://rdmpempresa.vercel.app/>. Si se cambia de dominio, actualizar `canonical`, `og:url` y `og:image` en `public/index.html` y volver a activar FormSubmit desde el nuevo dominio.
+
+## Publicación en Vercel
+
+`vercel.json` indica a Vercel que publique la carpeta `public/` (no hay paso de compilación). Cada `git push` a `main` debería generar un despliegue nuevo. Si la web publicada no refleja el último commit, revisa la pestaña **Deployments** del proyecto en Vercel o pulsa **Redeploy**.
 
 ## Estructura
 
