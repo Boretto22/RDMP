@@ -76,7 +76,10 @@
     }
   }
   pintarDato("correo", correo, function (v) { return "mailto:" + v; });
-  pintarDato("telefono", telefono, function (v) { return "tel:" + v.replace(/[^\d+]/g, ""); });
+  pintarDato("telefono", telefono, function (v) {
+    var numero = v.replace(/[^\d+]/g, "");
+    return "tel:" + (numero.charAt(0) === "+" ? numero : "+34" + numero);
+  });
   pintarDato("zonaCobertura", zona);
 
   /* ---------------- Formulario ---------------- */
@@ -184,9 +187,32 @@
 
     enviar.disabled = true;
     enviar.textContent = "Enviando…";
-    fetch(destino, { method: "POST", body: new FormData(form), headers: { Accept: "application/json" } })
+    var envio = {
+      "Nombre o empresa": d.nombre,
+      "Correo": d.correo,
+      "Tipo de máquina": d.tipo,
+      "Marca y modelo": d.modelo,
+      "Ubicación de la máquina": d.ubicacion,
+      "Descripción de la incidencia": d.descripcion,
+      "Acepta el uso de sus datos": "Sí",
+      _subject: "Solicitud de asistencia RDMP — " + d.tipo + " " + d.modelo,
+      _replyto: d.correo,
+      _template: "table",
+      _captcha: "false",
+      _honey: form.elements._honey ? form.elements._honey.value : "",
+    };
+    fetch(destino, {
+      method: "POST",
+      body: JSON.stringify(envio),
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+    })
       .then(function (r) {
         if (!r.ok) throw new Error("HTTP " + r.status);
+        return r.json().catch(function () { return {}; });
+      })
+      .then(function (respuesta) {
+        // FormSubmit responde 200 con success "false" mientras el correo de destino no está activado
+        if (respuesta.success === false || respuesta.success === "false") throw new Error(respuesta.message || "rechazado");
         form.reset();
         campos.forEach(function (c) { c.removeAttribute("aria-invalid"); });
         mostrarEstado("ok", "Solicitud enviada", "Hemos recibido tu solicitud. Te responderemos a la dirección de correo indicada.");

@@ -2,7 +2,7 @@
 
 Web estática de una sola página (HTML, CSS y JavaScript sin dependencias en el navegador). Todo lo que se publica está en la carpeta `public/`.
 
-> **Estado:** borrador. Antes de publicarla hay que completar los datos de contacto, confirmar los derechos de las imágenes y redactar el aviso legal y la política de privacidad (ver «Pendiente antes de publicar»).
+> **Estado:** borrador. Antes de publicarla hay que activar el envío del formulario, confirmar los derechos de las imágenes y redactar el aviso legal y la política de privacidad (ver «Pendiente antes de publicar»).
 
 ## Ejecutar en local
 
@@ -34,9 +34,18 @@ window.RDMP_CONFIG = {
 - El formulario tiene tres comportamientos, según lo que haya configurado:
   1. **Sin `destinoFormulario` ni `correo`** (estado actual): el botón está desactivado y se avisa de que el contacto está **pendiente de activación**. No se envía nada.
   2. **Solo `correo`**: el botón «Preparar correo» abre el programa de correo del usuario con la solicitud redactada. La web avisa de que el mensaje no se envía desde ella.
-  3. **Con `destinoFormulario`**: se envían los datos por `POST` (formato `FormData`, cabecera `Accept: application/json`) a esa URL. Es compatible con servicios como Formspree o Getform, o con un backend propio. Solo se muestra «Solicitud enviada» si el servidor responde correctamente.
+  3. **Con `destinoFormulario`** (estado actual): se envían los datos en JSON por `POST` a esa URL. Solo se muestra «Solicitud enviada» si el servicio confirma la recepción.
 
-Campos que se envían: `nombre`, `correo`, `tipo_maquina`, `marca_modelo`, `ubicacion`, `descripcion` y `privacidad`.
+### Envío actual: FormSubmit
+
+El formulario usa [FormSubmit](https://formsubmit.co/) (`https://formsubmit.co/ajax/rdmpmaquinaria@gmail.com`), que reenvía cada solicitud a **rdmpmaquinaria@gmail.com** como una tabla con todos los campos. El asunto incluye el tipo de máquina y el modelo, y al pulsar «Responder» se contesta directamente al cliente.
+
+- **Activación:** FormSubmit no reenvía nada hasta que se pulsa el enlace «Activate Form» del correo que manda a rdmpmaquinaria@gmail.com (revisa también la carpeta de spam). Hasta entonces la web muestra «No se ha podido enviar la solicitud». Si, al publicar la web en su dominio, vuelve a pedir activación, basta con repetir el paso.
+- **Protección antispam:** el formulario incluye un campo trampa oculto (`_honey`).
+- **Privacidad:** los datos pasan por FormSubmit, un servicio de terceros. La política de privacidad debe mencionarlo.
+- **Cambiar de servicio:** basta con poner otra URL en `destinoFormulario` (Formspree, un backend propio…). Si el servicio exige otro formato de datos, se ajusta en `public/js/main.js`.
+
+Campos que llegan al correo: nombre o empresa, correo, tipo de máquina, marca y modelo, ubicación de la máquina, descripción de la incidencia y aceptación del uso de los datos.
 
 ## Imágenes
 
@@ -79,8 +88,8 @@ Barlow y Barlow Condensed, servidas desde `public/assets/fonts/` (sin peticiones
 
 ## Pendiente antes de publicar
 
-- [ ] Correo, teléfono y zona de cobertura en `public/config.js`.
-- [ ] Destino real del formulario (`destinoFormulario`) o, como mínimo, el correo.
+- [x] Correo, teléfono y zona de cobertura en `public/config.js`.
+- [ ] Activar FormSubmit con el enlace recibido en rdmpmaquinaria@gmail.com y hacer una prueba real.
 - [ ] Derechos de publicación de las cinco imágenes usadas.
 - [ ] Aviso legal (identificación del titular, obligatoria en España según la LSSI) y política de privacidad (RGPD), enlazados en el pie y junto a la casilla del formulario.
 - [ ] Dominio definitivo: cuando exista, cambiar `og:image` en `public/index.html` por la URL absoluta (por ejemplo `https://dominio/assets/img/portada-bulldozer-735.jpg`) y añadir `<link rel="canonical">`.

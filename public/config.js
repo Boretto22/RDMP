@@ -7,17 +7,18 @@
  */
 window.RDMP_CONFIG = {
   // Correo público de contacto. Ejemplo: "contacto@rdmp.es"
-  correo: "",
+  correo: "rdmpmaquinaria@gmail.com",
 
-  // Teléfono tal y como debe mostrarse. Ejemplo: "+34 600 000 000"
-  telefono: "",
+  // Teléfono tal y como debe mostrarse. Sin prefijo se asume +34 para el enlace de llamada.
+  telefono: "649 632 791",
 
-  // Zona de cobertura en texto libre. Ejemplo: "Provincia de Madrid y limítrofes"
-  zonaCobertura: "",
+  // Zona de cobertura en texto libre.
+  zonaCobertura: "España (península y Baleares)",
 
-  // URL que recibe el formulario por POST (Formspree, Getform, un backend propio...).
+  // URL que recibe el formulario por POST en JSON. Ahora: FormSubmit, que reenvía
+  // cada solicitud al correo indicado al final de la URL.
   // Si se deja vacía pero hay correo, el botón preparará un correo en el programa
   // de correo del usuario (no se envía nada desde la web).
   // Si no hay ni destino ni correo, el formulario queda desactivado.
-  destinoFormulario: "",
+  destinoFormulario: "https://formsubmit.co/ajax/rdmpmaquinaria@gmail.com",
 };
